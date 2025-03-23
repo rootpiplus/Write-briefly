@@ -1,0 +1,5 @@
+#include<random>
+int random(int min,int max,int seed){
+    srand(seed);
+    return rand()%(max-min+1)+min;
+}
