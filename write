@@ -1,0 +1,38 @@
+#include <random>
+#include <string>
+
+int getRandom(int min, int max, int seed) {
+    std::srand(seed);
+    return std::rand() % (max - min + 1) + min;
+}
+
+struct Fraction {
+    int numerator;
+    int denominator;
+};
+
+Fraction parseFraction(std::string input) {
+    int pos = input.find('/');
+    if (pos == std::string::npos) return {std::stoi(input), 1};
+    return {std::stoi(input.substr(0, pos)), std::stoi(input.substr(pos + 1))};
+}
+
+int gcd(int a, int b) {
+    return (b == 0 ? a : gcd(b, a % b));
+}
+
+Fraction reduce(Fraction fraction) {
+    int g = gcd(fraction.numerator, fraction.denominator);
+    return {fraction.numerator / g, fraction.denominator / g};
+}
+
+Fraction compute(Fraction a, Fraction b, std::string op) {
+    if (op == "+") return reduce({a.numerator * b.denominator + a.denominator * b.numerator, a.denominator * b.denominator});
+    else if (op == "-") return reduce({a.numerator * b.denominator - a.denominator * b.numerator, a.denominator * b.denominator});
+    else if (op == "*") return reduce({a.numerator * b.numerator, a.denominator * b.denominator});
+    else return reduce({a.numerator * b.denominator, a.denominator * b.numerator});
+}
+
+std::string display(Fraction fraction) {
+    return std::to_string(fraction.numerator) + "/" + std::to_string(fraction.denominator);
+}
